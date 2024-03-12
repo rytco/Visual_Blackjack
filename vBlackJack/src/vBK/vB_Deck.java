@@ -57,6 +57,7 @@ abstract class vB_Deck {
 		for (int j = 0; j < numOfAces; j++) {
 			score += evalAce(score);
 		}
+		return score;
 	}
 	
 	public boolean fold() {
