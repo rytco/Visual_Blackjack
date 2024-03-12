@@ -16,18 +16,22 @@ abstract class vB_Deck {
 	public static int playerCash = 1000;
 	public static int currentBet;
 	
+	
 	/**
 	 * Gets current hand
 	 * @return current hand
 	 */
 	public abstract String getCurrentHand();
 	
-	public String deal() {
-		return null;
+	/**
+	 * Adds a random card to the users deck and then removes it from cards in play
+	 */
+	public void deal(ArrayList<String> inputDeck) {
+		
 	}
 	
-	public String fold() {
-		return null; 
+	public boolean fold() {
+		return false; 
 	}
 
 	
