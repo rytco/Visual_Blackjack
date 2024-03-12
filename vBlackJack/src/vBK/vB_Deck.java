@@ -21,7 +21,7 @@ abstract class vB_Deck {
 	 * Gets current hand
 	 * @return current hand
 	 */
-	public abstract String getCurrentHand();
+	public abstract ArrayList<String> getCurrentHand();
 	
 	/**
 	 * Adds a random card to the users deck and then removes it from cards in play
