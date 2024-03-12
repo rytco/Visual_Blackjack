@@ -9,5 +9,6 @@ public interface vBI_Actions {
 	 * @returns the card dealt
 	 */
 	public String deal();
+
 	
 }
