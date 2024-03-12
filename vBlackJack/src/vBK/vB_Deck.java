@@ -7,7 +7,7 @@ import java.util.List;
 /**
  *  Creating the framework for creating people who deal / play
  */
-abstract class vB_Deck implements vBI_Actions{
+abstract class vB_Deck {
 	public static List<String> CardsInPlay = Arrays.asList(
 			"ACE_C", "2_C", "3_C", "4_C", "5_C", "6_C", "7_C", "8_C", "9_C", "10_C", "Joker_C", "Queen_C", "King_C", // Clovers
 			"ACE_H", "2_H", "3_H", "4_H", "5_H", "6_H", "7_H", "8_H", "9_C", "10_H", "Joker_H", "Queen_H", "King_H", // Hearts
@@ -22,6 +22,13 @@ abstract class vB_Deck implements vBI_Actions{
 	 */
 	public abstract String getCurrentHand();
 	
+	public String deal() {
+		return null;
+	}
 	
+	public String fold() {
+		return null; 
+	}
+
 	
 }

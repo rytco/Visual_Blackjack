@@ -13,6 +13,7 @@ public class vBJ_Player extends vB_Deck{
 	public String getCurrentHand() {
 		// TODO Auto-generated method stub
 		return null;
+		//t test
 	}
 
 }
