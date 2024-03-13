@@ -41,7 +41,7 @@ abstract class vB_Deck {
 	public int eval(ArrayList<String> hand) {
 		int numOfAces = 0;
 		int score = 0;
-		
+	 
 		for (int k = 0; k < hand.size(); k++) {
 			if (hand.get(k).contains("ACE")) {
 				numOfAces++;
