@@ -33,7 +33,7 @@ abstract class vB_Deck {
 	public int evalAce(int score) {
 		if (score <= 10) {
 			return 11;
-		}
+		} 
 		else {
 			return 1;
 		}
