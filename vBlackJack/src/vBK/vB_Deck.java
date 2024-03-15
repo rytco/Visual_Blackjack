@@ -3,11 +3,14 @@ package vBK;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  *  Creating the framework for creating people who deal / play
  */
 abstract class vB_Deck {
+	//this has to stay public static so
+	//player and dealer objects can draw from (same) deck
 	public static List<String> CardsInPlay = Arrays.asList(
 			"ACE_C", "2_C", "3_C", "4_C", "5_C", "6_C", "7_C", "8_C", "9_C", "10_C", "Jack_C", "Queen_C", "King_C", // Clovers
 			"ACE_H", "2_H", "3_H", "4_H", "5_H", "6_H", "7_H", "8_H", "9_C", "10_H", "Jack_H", "Queen_H", "King_H", // Hearts
@@ -30,6 +33,7 @@ abstract class vB_Deck {
 		
 	}
 	
+	//evaluate the value of an ace
 	public int evalAce(int score) {
 		if (score <= 10) {
 			return 11;
@@ -61,6 +65,14 @@ abstract class vB_Deck {
 	
 	public boolean fold() {
 		return false; 
+	}
+
+	public String deal() {
+		Random r = new Random(System.currentTimeMillis());
+		int randomCardIndex = r.nextInt(CardsInPlay.size());
+		String card = CardsInPlay.get(randomCardIndex);
+		CardsInPlay.remove(randomCardIndex);
+		return card;
 	}
 
 	
