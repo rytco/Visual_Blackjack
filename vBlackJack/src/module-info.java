@@ -13,4 +13,5 @@ module vBK {
 	requires javafx.web;
 	requires javafx.swt; // im ignoring this issue
 	opens vBK;
+	//does funky stuff
 }
