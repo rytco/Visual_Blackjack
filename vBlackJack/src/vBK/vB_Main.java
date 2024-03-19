@@ -9,7 +9,8 @@ public class vB_Main {
 	public static void main(String[] args) {
 		vBGui gui = new vBGui();
 		vB_BlackJackLogic logic = new vB_BlackJackLogic();
-
+		
+		gui.start();
 	}
 
 }

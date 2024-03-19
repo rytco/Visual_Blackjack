@@ -1,11 +1,19 @@
 package vBK;
 
-import javafx.application.Application;
+
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class vBGui {
-
+	/**
+	 * Creating the main start page
+	 */
+	public void start() {
+		// Creating the stage
+		Stage stage = new Stage();
+		stage.setTitle("Blackjack");
+		
+		//Showing stage
+		stage.show();
+	}	
 }
