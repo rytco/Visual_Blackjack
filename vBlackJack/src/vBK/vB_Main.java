@@ -1,5 +1,7 @@
 package vBK;
 
+import javafx.stage.Stage;
+
 public class vB_Main {
 
 	/**
@@ -10,7 +12,12 @@ public class vB_Main {
 		vBGui gui = new vBGui();
 		vB_BlackJackLogic logic = new vB_BlackJackLogic();
 		
-		gui.start();
+		try {
+			gui.start();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
