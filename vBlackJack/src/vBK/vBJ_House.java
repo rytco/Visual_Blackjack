@@ -4,16 +4,27 @@ import java.util.ArrayList;
 
 public class vBJ_House extends vB_Deck{
 
-	@Override
-	public String deal() {
-		
-		return null;
-	}
+	private ArrayList<String> hand = new ArrayList<>();
 
+	/**
+	 * Returns the House's cards
+	 */
 	@Override
 	public ArrayList<String> getCurrentHand() {
-		// TODO Auto-generated method stub
-		return null;
+		return hand;
 	}
+
+	
+	/**
+	 * Retrieves card from deck, gives it to house
+	 */
+	@Override
+	public void hit() {
+		String card = deal();
+		hand.add(card);
+	}
+	
+	
+
 
 }
