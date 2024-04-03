@@ -33,6 +33,17 @@ public class vBJ_Player extends vB_Deck{
 		hand.clear();
 	}
 	
+	/**
+	 * Place Bet
+	 */
+	public void placeBet(int bet) {
+		this.bet = bet;
+	}
+	
+	public void doubleDown() {
+		this.bet *= 2;
+	}
+	
 
 
 }

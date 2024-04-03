@@ -84,11 +84,6 @@ abstract class vB_Deck {
 		return score;
 	}
 	
-	public boolean fold() {
-		return false; 
-	}
-
-	
 
 	
 }
