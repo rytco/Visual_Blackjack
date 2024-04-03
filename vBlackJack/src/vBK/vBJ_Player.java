@@ -26,6 +26,13 @@ public class vBJ_Player extends vB_Deck{
 		hand.add(card);
 	}
 	
+	/**
+	 * Resets hand, gets ready for next round
+	 */
+	public void nextRound() {
+		hand.clear();
+	}
+	
 
 
 }

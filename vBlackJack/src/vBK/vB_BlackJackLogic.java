@@ -33,14 +33,12 @@ public class vB_BlackJackLogic {
 		if (playerScore == houseScore) {
 			return "Push";
 		}
-		else if (playerScore > houseScore) {
+		else if ((playerScore > houseScore) || houseScore > 21 ) {
 			return "Player";
 		}
 		else {
 			return "House";
 		}
-	}
-	
-	
+	}	
 
 }
