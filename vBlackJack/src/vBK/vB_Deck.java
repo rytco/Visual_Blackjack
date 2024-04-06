@@ -36,6 +36,7 @@ abstract class vB_Deck {
 		return card;
 	}
 	
+	
 	/**
 	 * Allows cards to be returned to subclasses player, house
 	 * @return
@@ -84,6 +85,7 @@ abstract class vB_Deck {
 		return score;
 	}
 	
-
+	abstract int getScore();
+	
 	
 }
