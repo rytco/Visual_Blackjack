@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 import javafx.animation.*;
@@ -44,8 +45,8 @@ import javafx.stage.Stage;
 public class vBGui extends Application{
 	// Replace with personal file location because the thing is kinda janky due to PATHs being weird
 	// Ignore the fact its called cards but it holds all assets :D
-	public final static String fileDir =  "C:\\Users\\antho\\git\\Visual_Blackjack\\vBlackJack\\src\\cards\\";
-	
+	public final static String fileDir =  "C:\\Users\\rtSch\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
+	//C:\Users\rtSch\git\Visual_Blackjack\vBlackJack\src\vBK\cards\
 	static vBJ_Player egg = new vBJ_Player();
 	static vBJ_House house = new vBJ_House();
 	
@@ -211,14 +212,18 @@ public class vBGui extends Application{
 	/**
 	 * Executes dealers turn
 	 * @throws FileNotFoundException 
+	 * @throws InterruptedException 
 	 */
-	public static void dealerTurn(HBox location, Stage in) throws FileNotFoundException {
+	public static void dealerTurn(HBox location, Stage in) throws FileNotFoundException, InterruptedException {
 		while (house.getScore() <= 16) {
 			addCard(house.hit(), location);
-			
+			//TimeUnit.SECONDS.sleep(5);
 		}
 		
+		//TimeUnit.SECONDS.sleep(10);
 		gameEndSequence(house.getScore(), egg.getScore(), in);
+		
+		
 	}
 	
 	/**
@@ -228,7 +233,9 @@ public class vBGui extends Application{
 		String winner = vB_BlackJackLogic.getWinner(egg, house);
 		VBox layout = new VBox();
 		Scene endGame = new Scene(layout, 1280, 720);
-			
+		egg.nextRound();
+		house.nextRound();
+		
 		Button contine = new Button("Continue");
 		layout.setAlignment(Pos.CENTER);
 		layout.getChildren().add(contine);
@@ -236,8 +243,14 @@ public class vBGui extends Application{
 		if (winner.equals("Player")) {
 			//TODO Setup images and stuff or w/e
 			
+			egg.balance = egg.getBalance() + (egg.bet * 2);
+			egg.bet = 0;
+			
 			in.setScene(endGame);
 		} else if (winner.equals("House")) {
+			egg.balance -= egg.bet;
+			egg.bet = 0;
+			
 			in.setScene(endGame);
 		} else {
 			in.setScene(endGame);
@@ -268,14 +281,10 @@ public class vBGui extends Application{
 		// Creating elements for the panel
 		Label monei = new Label();
 		monei.setText(String.format("Balance:%n%d", egg.getBalance()));
-		//monei.setPadding(30);
-		Label currentBet = new Label();
-		currentBet.setText("Insert Anthonys Method Here");
-		Label currentBid = new Label();
-		currentBid.setText("Insert Anthonys Method Here");
 		Label betText = new Label(String.format("Bet: %d", egg.bet));
 		Label handScore = new Label(String.format("Your score: %d", egg.getScore()));
 		Button bet = new Button("Bid + 50"); 
+		Button betless = new Button("Bid - 50");
 		Button hit = new Button("Hit"); 
 		Button stando = new Button("Stand");
 		Button deal = new Button("Deal");
@@ -283,7 +292,7 @@ public class vBGui extends Application{
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
-		userPanel.getChildren().addAll(monei, currentBet, currentBid, betText, handScore, deal, bet, hit, stando);
+		userPanel.getChildren().addAll(monei, currentBet, currentBid, betText, handScore, deal, bet, betless, hit, stando);
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
@@ -328,7 +337,12 @@ public class vBGui extends Application{
 						hit.setVisible(false);
 					}
 				} else {
-					dealerTurn(dealerStuff, in);
+					try {
+						dealerTurn(dealerStuff, in);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -337,15 +351,27 @@ public class vBGui extends Application{
 		});
 		
 		bet.setOnAction((e) -> { //Does bet button
-			if (egg.bet <= egg.getBalance()) {
+			if (egg.bet < egg.getBalance()) {
 				egg.placeBet(egg.bet += 50);
+				betText.setText(String.format("Bet: %d", egg.bet));
+			}
+		});
+		
+		betless.setOnAction((e) -> {
+			if (egg.bet >= 50) {
+				egg.placeBet(egg.bet -= 50);
 				betText.setText(String.format("Bet: %d", egg.bet));
 			}
 		});
 		
 		stando.setOnAction(e -> {
 			try {
-				dealerTurn(dealerStuff, in);
+				try {
+					dealerTurn(dealerStuff, in);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				System.out.println(e1);
