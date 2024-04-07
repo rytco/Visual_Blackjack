@@ -45,7 +45,7 @@ import javafx.stage.Stage;
 public class vBGui extends Application{
 	// Replace with personal file location because the thing is kinda janky due to PATHs being weird
 	// Ignore the fact its called cards but it holds all assets :D
-	public final static String fileDir =  "C:\\Users\\rtSch\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
+	public final static String fileDir =  "%USERPROFILE%\\git\\Visual_Blackjack\\vBlackJack\\src\\cards\\";
 	
 	static vBJ_Player egg = new vBJ_Player();
 	static vBJ_House house = new vBJ_House();
@@ -181,7 +181,7 @@ public class vBGui extends Application{
 			put("King_S", "king_of_spades.png");
 			put("King_S", "king_of_spades.png");
 			put("Jack_S", "jack_of_spades.png");
-			put("back", "backcard.png");
+			put("HIDDEN", "backwards_Card.png");
 		}};
 		
 		//System.out.println("works");
@@ -294,6 +294,18 @@ public class vBGui extends Application{
 		//UserHand
 		HBox userStuff = new HBox();
 		userStuff.setAlignment(Pos.CENTER);
+		
+		//initial deal
+		try {
+			addCard(egg.hit(), userStuff);
+			addCard(house.hit(), dealerStuff);
+			addCard(egg.hit(), userStuff);
+			addCard("HIDDEN", dealerStuff);
+			house.hit();
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		
 		// Button Actions
 		hit.setOnAction(e -> { //TODO replace with proper method
