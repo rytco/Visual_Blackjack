@@ -26,6 +26,7 @@ public class vBJ_House extends vB_Deck{
 		hand.add(card);
 		score = eval(hand);
 		return card;
+
 	}
 	
 	/**
