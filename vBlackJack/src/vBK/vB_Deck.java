@@ -42,7 +42,7 @@ abstract class vB_Deck {
 	 * @return
 	 */
 	
-	public abstract void hit();
+	public abstract String hit();
 	
 	/**
 	 * evaluate the value of an ace
