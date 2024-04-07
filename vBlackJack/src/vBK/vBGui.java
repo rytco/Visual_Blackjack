@@ -45,7 +45,7 @@ import javafx.stage.Stage;
 public class vBGui extends Application{
 	// Replace with personal file location because the thing is kinda janky due to PATHs being weird
 	// Ignore the fact its called cards but it holds all assets :D
-	public final static String fileDir =  "C:\\Users\\rtSch\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
+	public final static String fileDir =  "C:\\Users\\antho\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
 	//C:\Users\rtSch\git\Visual_Blackjack\vBlackJack\src\vBK\cards\
 	static vBJ_Player egg = new vBJ_Player();
 	static vBJ_House house = new vBJ_House();
@@ -208,19 +208,27 @@ public class vBGui extends Application{
 		location.getChildren().add(showcard(card));
 	}
 	
+	public static void removeCard(String card, HBox location) throws FileNotFoundException {
+		location.getChildren().remove(showcard(card));
+	}
+	
 	/**
 	 * Executes dealers turn
 	 * @throws FileNotFoundException 
 	 * @throws InterruptedException 
 	 */
 	public static void dealerTurn(HBox location, Stage in) throws FileNotFoundException, InterruptedException {
+		//show hidden card
+		location.getChildren().remove(1);
+		addCard(house.getCurrentHand().get(1), location);
+		//draw to 16
 		while (house.getScore() <= 16) {
+			//TimeUnit.SECONDS.sleep(1);
 			addCard(house.hit(), location);
-			//TimeUnit.SECONDS.sleep(5);
 		}
 		
 		//TimeUnit.SECONDS.sleep(10);
-		gameEndSequence(house.getScore(), egg.getScore(), in);
+		//gameEndSequence(house.getScore(), egg.getScore(), in);
 		
 		
 	}
@@ -333,11 +341,12 @@ public class vBGui extends Application{
 		Button hit = new Button("Hit"); 
 		Button stando = new Button("Stand");
 		Button deal = new Button("Deal");
+		Button ok = new Button("Continue");
 
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
-		userPanel.getChildren().addAll(monei, currentBet, currentBid, betText, handScore, deal, bet, betless, hit, stando);
+		userPanel.getChildren().addAll(monei, betText, handScore, deal, bet, betless, hit, stando, ok);
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
@@ -354,10 +363,17 @@ public class vBGui extends Application{
 		HBox userStuff = new HBox();
 		userStuff.setAlignment(Pos.CENTER);
 		
+		//user cannot hit until initial deal
+		hit.setVisible(false);
+		
+		//cannot continue until round end
+		ok.setVisible(false);
+		
 		//initial deal
 		deal.setOnAction(e -> {
 			if (egg.getCurrentHand().size() == 0) {
 				try {
+					hit.setVisible(true);
 					addCard(egg.hit(), userStuff);
 					addCard(house.hit(), dealerStuff);
 					addCard(egg.hit(), userStuff);
@@ -380,14 +396,15 @@ public class vBGui extends Application{
 					handScore.setText(String.format("Your score: %d", egg.getScore()));
 					if (!egg.canHit()) {
 						hit.setVisible(false);
+						try {
+							dealerTurn(dealerStuff, in);
+							ok.setVisible(true);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 				} else {
-					try {
-						dealerTurn(dealerStuff, in);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 					hit.setVisible(false);
 				}
 			} catch (FileNotFoundException e1) {
@@ -411,9 +428,12 @@ public class vBGui extends Application{
 		});
 		
 		stando.setOnAction(e -> {
+			hit.setVisible(false);
+			//nested try is absolutely INSANE
 			try {
 				try {
 					dealerTurn(dealerStuff, in);
+					ok.setVisible(true);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -421,6 +441,14 @@ public class vBGui extends Application{
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
 				System.out.println(e1);
+			}
+		});
+		
+		ok.setOnAction(e -> {
+			try {
+				gameEndSequence(house.getScore(), egg.getScore(), in);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
 			}
 		});
 		
