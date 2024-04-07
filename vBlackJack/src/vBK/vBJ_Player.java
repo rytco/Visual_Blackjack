@@ -35,6 +35,7 @@ public class vBJ_Player extends vB_Deck{
 	 */
 	public void nextRound() {
 		hand.clear();
+		score = eval(hand);
 	}
 	
 	/**
