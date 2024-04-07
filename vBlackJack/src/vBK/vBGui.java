@@ -45,8 +45,8 @@ import javafx.stage.Stage;
 public class vBGui extends Application{
 	// Replace with personal file location because the thing is kinda janky due to PATHs being weird
 	// Ignore the fact its called cards but it holds all assets :D
-	public final static String fileDir =  "%USERPROFILE%\\git\\Visual_Blackjack\\vBlackJack\\src\\cards\\";
-	
+	public final static String fileDir =  "C:\\Users\\rtSch\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
+	//C:\Users\rtSch\git\Visual_Blackjack\vBlackJack\src\vBK\cards\
 	static vBJ_Player egg = new vBJ_Player();
 	static vBJ_House house = new vBJ_House();
 	
@@ -243,8 +243,14 @@ public class vBGui extends Application{
 		if (winner.equals("Player")) {
 			//TODO Setup images and stuff or w/e
 			
+			egg.balance = egg.getBalance() + (egg.bet * 2);
+			egg.bet = 0;
+			
 			in.setScene(endGame);
 		} else if (winner.equals("House")) {
+			egg.balance -= egg.bet;
+			egg.bet = 0;
+			
 			in.setScene(endGame);
 		} else {
 			in.setScene(endGame);
@@ -272,13 +278,14 @@ public class vBGui extends Application{
 		monei.setText(String.format("Balance:%n%d", egg.getBalance()));
 		Label betText = new Label(String.format("Bet: %d", egg.bet));
 		Button bet = new Button("Bid + 50"); 
+		Button betless = new Button("Bid - 50");
 		Button hit = new Button("Hit"); 
 		Button stando = new Button("Stand");
 
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
-		userPanel.getChildren().addAll(monei, betText, bet, hit, stando);
+		userPanel.getChildren().addAll(monei, betText, bet, betless, hit, stando);
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
@@ -330,6 +337,13 @@ public class vBGui extends Application{
 		bet.setOnAction((e) -> { //Does bet button
 			if (egg.bet < egg.getBalance()) {
 				egg.placeBet(egg.bet += 50);
+				betText.setText(String.format("Bet: %d", egg.bet));
+			}
+		});
+		
+		betless.setOnAction((e) -> {
+			if (egg.bet >= 50) {
+				egg.placeBet(egg.bet -= 50);
 				betText.setText(String.format("Bet: %d", egg.bet));
 			}
 		});
