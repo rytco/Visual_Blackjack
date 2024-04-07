@@ -34,6 +34,7 @@ public class vBJ_House extends vB_Deck{
 	 */
 	public void nextRound() {
 		hand.clear();
+		score = eval(hand);
 	}
 
 
