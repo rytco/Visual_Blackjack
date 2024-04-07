@@ -68,7 +68,6 @@ public class vBGui extends Application{
 		VBox layout = new VBox();
 		Scene starto = new Scene(layout, 1280, 720);
 		
-		
 		Button start = new Button("Start Game"); 
 		layout.setAlignment(Pos.CENTER);
 		layout.getChildren().add(start);
@@ -227,12 +226,27 @@ public class vBGui extends Application{
 	}
 	
 	/**
-	 * Varying on what happens determines the end stuff displayed
+	 * Takes image and puts into grop so you can add it into a scene and make it have a image as your backround
+	 * @param fileName - Input file
+	 * @return outtie - Group that holds the image
+	 * @throws FileNotFoundException
 	 */
-	public static void gameEndSequence(int dealScore, int uScore, Stage in) {
+	public static Group setBackround(String fileName) throws FileNotFoundException {
+		Image image = new Image(new FileInputStream(String.format("%s%s", fileDir, fileName)));
+		ImageView imgV = new ImageView(image);
+		Group outtie = new Group(imgV);
+		
+		return outtie;
+	}
+	
+	/**
+	 * Varying on what happens determines the end stuff displayed
+	 * @throws FileNotFoundException 
+	 */
+	public static void gameEndSequence(int dealScore, int uScore, Stage in) throws FileNotFoundException {
 		String winner = vB_BlackJackLogic.getWinner(egg, house);
 		VBox layout = new VBox();
-		Scene endGame = new Scene(layout, 1280, 720);
+		Scene endGame;
 		egg.nextRound();
 		house.nextRound();
 		
@@ -241,18 +255,49 @@ public class vBGui extends Application{
 		layout.getChildren().add(contine);
 		
 		if (winner.equals("Player")) {
-			//TODO Setup images and stuff or w/e
+			//TODO Setup images and stuff or w/e	
+			/*
+			Image image = new Image(new FileInputStream(String.format("%swinner.jpg", fileDir)));
+			ImageView imageV = new ImageView(image);
+			imageV.setPreserveRatio(true);
+			Group outtie = new Group(imageV);
+			*/
+			Group outtie = new Group();
+			try {
+				outtie = setBackround("winner.jpg");
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			egg.balance = egg.getBalance() + (egg.bet * 2);
 			egg.bet = 0;
-			
+			outtie.getChildren().add(layout);
+			endGame = new Scene(outtie, 640, 360);
+
 			in.setScene(endGame);
 		} else if (winner.equals("House")) {
+			Group out = new Group();
+			try {
+				out = setBackround("philly.gif");
+			} catch (Exception e) {
+				
+			}
+			
+			out.getChildren().add(layout);
 			egg.balance -= egg.bet;
 			egg.bet = 0;
 			
+			
+			endGame = new Scene(out);
 			in.setScene(endGame);
 		} else {
+			Group out = new Group();
+			
+			out = setBackround("tole.gif");
+			out.getChildren().add(layout);
+			
+			endGame = new Scene(out, 1280, 720);
 			in.setScene(endGame);
 		}
 		
@@ -343,6 +388,7 @@ public class vBGui extends Application{
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					hit.setVisible(false);
 				}
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block
