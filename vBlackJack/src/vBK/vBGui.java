@@ -428,6 +428,8 @@ public class vBGui extends Application{
 		});
 		
 		stando.setOnAction(e -> {
+			hit.setVisible(false);
+			//nested try is absolutely INSANE
 			try {
 				try {
 					dealerTurn(dealerStuff, in);
