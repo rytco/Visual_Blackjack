@@ -278,7 +278,7 @@ public class vBGui extends Application{
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
-		userPanel.getChildren().addAll(monei, betText, bet, hit);
+		userPanel.getChildren().addAll(monei, betText, bet, hit, stando);
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
