@@ -14,6 +14,7 @@ public class vB_Main {
 		
 		try {
 			gui.start();
+			gui.card("2_C");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
