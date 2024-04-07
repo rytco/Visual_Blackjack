@@ -21,10 +21,11 @@ public class vBJ_House extends vB_Deck{
 	 * Updates score simultaneously
 	 */
 	@Override
-	public void hit() {
+	public String hit() {
 		String card = deal();
 		hand.add(card);
 		score = eval(hand);
+		return card;
 	}
 	
 	/**

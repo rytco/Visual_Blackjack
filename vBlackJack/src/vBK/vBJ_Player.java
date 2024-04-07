@@ -20,12 +20,14 @@ public class vBJ_Player extends vB_Deck{
 	
 	/**
 	 * Retrieves card from deck, gives it to player
+	 * @return Returns card produced 
 	 */
 	@Override
-	public void hit() {
+	public String hit() {
 		String card = deal();
 		hand.add(card);
 		score = eval(hand);
+		return card;
 	}
 	
 	/**
@@ -58,7 +60,9 @@ public class vBJ_Player extends vB_Deck{
 		return false;
 	}
 	
-	
+	public int getBalance() {
+		return balance;
+	}
 
 
 }

@@ -22,6 +22,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -40,8 +44,10 @@ import javafx.stage.Stage;
 public class vBGui extends Application{
 	// Replace with personal file location because the thing is kinda janky due to PATHs being weird
 	// Ignore the fact its called cards but it holds all assets :D
-	public final String fileDir =  "C:\\Users\\rtSch\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
+	public final static String fileDir =  "C:\\Users\\rtSch\\git\\Visual_Blackjack\\vBlackJack\\src\\vBK\\cards\\";
 	
+	static vBJ_Player egg = new vBJ_Player();
+	static vBJ_House house = new vBJ_House();
 	
 	/**
 	 * Launches the app :D
@@ -52,36 +58,33 @@ public class vBGui extends Application{
 	}
 	
 	/**
-	 * Its the win/lose screen
-	 * @param Inputs 1-3 and determines what text is displayed when you win
-	 */
-	public Scene endScreen(int status) {
-		return null;
-	}
-	
-	/**
 	 * Screen shown when starting up the game for the first time
 	 * Consisting of a start button and exit button and image that says stuff
 	 * @throws FileNotFoundException 
 	 */
-	public void startScreen(Group main) throws FileNotFoundException { // Replace to return type Scene to get it to output something...
+	public static Scene startScreen(Stage in) throws FileNotFoundException { // Replace to return type Scene to get it to output something...
 		// Creates the scene
-		//tarto = new Scene(main, 1280, 720);
+		VBox layout = new VBox();
+		Scene starto = new Scene(layout, 1280, 720);
 		
-		// Adds to main or smth idk
-		main.getChildren().add(imageDisplayer("startScreen.webp"));
 		
-		// Returns? WAAH
-		//return main;
+		Button start = new Button("Start Game"); 
+		layout.setAlignment(Pos.CENTER);
+		layout.getChildren().add(start);
+		
+		// Switches scene
+		start.setOnAction(e -> in.setScene(gameScreen(in)));
+		
+		return starto;
 	}
 	
 	/**
-	 * It createa da image thigny
+	 * It createa da image thigny -- Not sure why i wrote this...
 	 * @param cardName
 	 * @return ImageView to display on stuff or w/e
 	 * @throws FileNotFoundException
 	 */
-	public ImageView imageDisplayer(String cardName) throws FileNotFoundException {
+	public static ImageView imageDisplayer(String cardName) throws FileNotFoundException {
 		// Initializing parts of it or smth
 		
 		//Unsure why paths dont work
@@ -98,10 +101,10 @@ public class vBGui extends Application{
 	}
 	
 	/**
-	 *  Display card
+	 * Primary method of displaing card
 	 * @throws FileNotFoundException 
 	 */
-	public ImageView showcard(String cardIn) throws FileNotFoundException {
+	public static ImageView showcard(String cardIn) throws FileNotFoundException {
 		ImageView imgview = imageDisplayer(card(cardIn));
 		
 		// Setting size parameters
@@ -118,7 +121,7 @@ public class vBGui extends Application{
 	 * @param takes input card type and corrolates it to hashmap
 	 * @return returns respective filepath
 	 */
-	public String card(String cardtype) {
+	public static String card(String cardtype) {
 		// Creating a linked hashmap of the card to corresponding filelocation
 		LinkedHashMap<String, String> allCards = new LinkedHashMap<String, String>(){{
 			put("ACE_C",  "ace_of_clubs.png");
@@ -194,27 +197,61 @@ public class vBGui extends Application{
 	}
 
 	/**
-	 * Adds card into dealers hand on gui
+	 * Adds card into location hand on gui
 	 * @param card - Card name
+	 * @param location - where to display the card
+	 * @throws FileNotFoundException 
 	 */
-	public void addDealerCard(String card) {
-		
+	public static void addCard(String card, HBox location) throws FileNotFoundException {
+		// Adds the card into the location
+		location.getChildren().add(showcard(card));
 	}
 	
 	/**
-	 * Adds card into users hand on gui
-	 * @param card - Card name
+	 * Executes dealers turn
+	 * @throws FileNotFoundException 
 	 */
-	public void addUserCard(String card) {
+	public static void dealerTurn(HBox location, Stage in) throws FileNotFoundException {
+		while (house.getScore() <= 16) {
+			addCard(house.hit(), location);
+			
+		}
+		
+		gameEndSequence(house.getScore(), egg.getScore(), in);
+	}
+	
+	/**
+	 * Varying on what happens determines the end stuff displayed
+	 */
+	public static void gameEndSequence(int dealScore, int uScore, Stage in) {
+		String winner = vB_BlackJackLogic.getWinner(egg, house);
+		VBox layout = new VBox();
+		Scene endGame = new Scene(layout, 1280, 720);
+			
+		Button contine = new Button("Continue");
+		layout.setAlignment(Pos.CENTER);
+		layout.getChildren().add(contine);
+		
+		if (winner.equals("Player")) {
+			//TODO Setup images and stuff or w/e
+			
+			in.setScene(endGame);
+		} else if (winner.equals("House")) {
+			in.setScene(endGame);
+		} else {
+			in.setScene(endGame);
+		}
+		
+		contine.setOnAction(e -> {
+			in.setScene(gameScreen(in));
+		});
 		
 	}
 	
 	/**
 	 * It shows the game screen and stuff
 	 */
-	public Scene gameScreen() {
-		Group test = new Group();
-		
+	public static Scene gameScreen(Stage in) {
 		//Creating the outer area which the right sidebar will contain information & buttons
 		BorderPane outer = new BorderPane();
 		outer.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
@@ -224,23 +261,21 @@ public class vBGui extends Application{
 		
 		// Creating elements for the panel
 		Label monei = new Label();
-		monei.setText("Lol lmao pull and insert anthonys method here");
+		monei.setText(String.format("Balance:%n%d", egg.getBalance()));
 		//monei.setPadding(30);
 		Label currentBet = new Label();
 		currentBet.setText("Insert Anthonys Method Here");
 		Label currentBid = new Label();
 		currentBid.setText("Insert Anthonys Method Here");
-		Button up10 = new Button("Bid +10");
-		Button stand = new Button("Stand"); //TODO add this
-		Button fold = new Button("Fold"); // TODO add this
-		
-		// Button Actions
-		up10.setOnAction(e -> System.out.println("Insert increase bid element")); // Move it into the increase bid method
-		
+		Label betText = new Label(String.format("Bet: %d", egg.bet));
+		Button bet = new Button("Bid + 50"); 
+		Button hit = new Button("Hit"); 
+		Button stando = new Button("Stand");
+
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
-		userPanel.getChildren().addAll(monei, currentBet, currentBid, up10);
+		userPanel.getChildren().addAll(monei, currentBet, currentBid, betText, bet, hit);
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
@@ -251,12 +286,42 @@ public class vBGui extends Application{
 		
 		//DealerHand
 		HBox dealerStuff = new HBox();
-		
-		
+		dealerStuff.setAlignment(Pos.CENTER);
 		
 		//UserHand
 		HBox userStuff = new HBox();
+		userStuff.setAlignment(Pos.CENTER);
 		
+		// Button Actions
+		hit.setOnAction(e -> { //TODO replace with proper method
+			try {
+				// If its possible to hit runs hit and applies it to proper location
+				if (egg.canHit()) {
+					addCard(egg.hit(), userStuff);
+				} else {
+					dealerTurn(dealerStuff, in);
+				}
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				System.out.println(e1);
+			}
+		});
+		
+		bet.setOnAction((e) -> { //Does bet button
+			if (egg.bet <= egg.getBalance()) {
+				egg.placeBet(egg.bet += 50);
+				betText.setText(String.format("Bet: %d", egg.bet));
+			}
+		});
+		
+		stando.setOnAction(e -> {
+			try {
+				dealerTurn(dealerStuff, in);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				System.out.println(e1);
+			}
+		});
 		
 		// Inserting it (⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄ 
 		gameSpace.setTop(dealerStuff);
@@ -277,10 +342,10 @@ public class vBGui extends Application{
 		// Group <- Scene <- Pane type
 		
 		//Stage gui = new Stage();
-		Group blackjack = new Group();
+		//Group blackjack = new Group();
 		//startScreen(blackjack);
-		Scene temp = new Scene(blackjack, 1280, 720);
-		BorderPane setup = new BorderPane();
+		//Scene temp = new Scene(blackjack, 1280, 720);
+		//BorderPane setup = new BorderPane();
 		
 		// Utilize BorderPane format, right side being buttons, rest being the gamespace
 		
@@ -289,7 +354,8 @@ public class vBGui extends Application{
 		//blackjack.getChildren().add(showcard("10_D"));
 		
 		gui.setTitle("Blackjack");
-		gui.setScene(gameScreen());
+		gui.setScene(startScreen(gui));
+		
 		gui.show();
 	}
 	
