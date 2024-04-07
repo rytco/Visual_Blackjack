@@ -253,6 +253,11 @@ public class vBGui extends Application{
 	 * It shows the game screen and stuff
 	 */
 	public static Scene gameScreen(Stage in) {
+		
+		//onLoad - make sure player/dealer object data is clear for new round
+		egg.nextRound();
+		house.nextRound();
+		
 		//Creating the outer area which the right sidebar will contain information & buttons
 		BorderPane outer = new BorderPane();
 		outer.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
@@ -269,14 +274,16 @@ public class vBGui extends Application{
 		Label currentBid = new Label();
 		currentBid.setText("Insert Anthonys Method Here");
 		Label betText = new Label(String.format("Bet: %d", egg.bet));
+		Label handScore = new Label(String.format("Your score: %d", egg.getScore()));
 		Button bet = new Button("Bid + 50"); 
 		Button hit = new Button("Hit"); 
 		Button stando = new Button("Stand");
+		Button deal = new Button("Deal");
 
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
-		userPanel.getChildren().addAll(monei, currentBet, currentBid, betText, bet, hit);
+		userPanel.getChildren().addAll(monei, currentBet, currentBid, betText, handScore, deal, bet, hit, stando);
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
@@ -294,16 +301,21 @@ public class vBGui extends Application{
 		userStuff.setAlignment(Pos.CENTER);
 		
 		//initial deal
-		try {
-			addCard(egg.hit(), userStuff);
-			addCard(house.hit(), dealerStuff);
-			addCard(egg.hit(), userStuff);
-			addCard("HIDDEN", dealerStuff);
-			house.hit();
-			
-		} catch (Exception e) {
-			System.out.println(e);
-		}
+		deal.setOnAction(e -> {
+			if (egg.getCurrentHand().size() == 0) {
+				try {
+					addCard(egg.hit(), userStuff);
+					addCard(house.hit(), dealerStuff);
+					addCard(egg.hit(), userStuff);
+					addCard("HIDDEN", dealerStuff);
+					house.hit();
+					handScore.setText(String.format("Your score: %d", egg.getScore()));
+					
+				} catch (Exception ex) {
+					System.out.println(ex);
+				}	
+			}
+		});
 		
 		// Button Actions
 		hit.setOnAction(e -> { //TODO replace with proper method
@@ -311,6 +323,10 @@ public class vBGui extends Application{
 				// If its possible to hit runs hit and applies it to proper location
 				if (egg.canHit()) {
 					addCard(egg.hit(), userStuff);
+					handScore.setText(String.format("Your score: %d", egg.getScore()));
+					if (!egg.canHit()) {
+						hit.setVisible(false);
+					}
 				} else {
 					dealerTurn(dealerStuff, in);
 				}
