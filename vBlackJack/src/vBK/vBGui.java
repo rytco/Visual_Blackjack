@@ -109,8 +109,8 @@ public class vBGui extends Application{
 		
 		// Setting size parameters
 		// Setting image ratio
-		imgview.setFitWidth(80);
-		imgview.setFitHeight(80);
+		imgview.setFitWidth(180);
+		imgview.setFitHeight(180);
 		
 		return imgview;
 	}
@@ -333,7 +333,7 @@ public class vBGui extends Application{
 		
 		// Creating elements for the panel
 		Label monei = new Label();
-		monei.setText(String.format("Balance:%n%d", egg.getBalance()));
+		monei.setText(String.format("Balance: %d", egg.getBalance()));
 		Label betText = new Label(String.format("Bet: %d", egg.bet));
 		Label handScore = new Label(String.format("Your score: %d", egg.getScore()));
 		Button bet = new Button("Bid + 50"); 
@@ -342,11 +342,14 @@ public class vBGui extends Application{
 		Button stando = new Button("Stand");
 		Button deal = new Button("Deal");
 		Button ok = new Button("Continue");
+		
 
 		// Adding elements into panel
 		userPanel.setSpacing(30);
 		userPanel.setAlignment(Pos.CENTER);
 		userPanel.getChildren().addAll(monei, betText, handScore, deal, bet, betless, hit, stando, ok);
+		userPanel.setMinWidth(250);
+		
 		
 		// Setting its colors
 		userPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, null, null)));
@@ -374,6 +377,9 @@ public class vBGui extends Application{
 			if (egg.getCurrentHand().size() == 0) {
 				try {
 					hit.setVisible(true);
+					//cannot bet after deal
+					bet.setVisible(false);
+					betless.setVisible(false);
 					addCard(egg.hit(), userStuff);
 					addCard(house.hit(), dealerStuff);
 					addCard(egg.hit(), userStuff);
